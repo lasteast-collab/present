@@ -177,21 +177,21 @@ export function drawCameraOverlay(ctx, cam, cs, r, enter = 1) {
   ctx.translate(x, y);
   if (cs.layout === 'card') { ctx.save(); camPath(ctx, 'roundRect', w, h, Math.min(w, h) * .06); ctx.fillStyle = cs.cardBg || '#16181f'; if (cs.shadow) { ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8; } ctx.fill(); ctx.restore(); }
   if (!full && cs.shadow && cs.layout !== 'card') { ctx.save(); camPath(ctx, shape, w, vh); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 26; ctx.shadowOffsetY = 8; ctx.fillStyle = '#000'; ctx.fill(); ctx.restore(); }
-  if (cs.glow) { ctx.save(); camPath(ctx, shape, w, vh); ctx.shadowColor = cs.border || '#f26a1b'; ctx.shadowBlur = 30; ctx.strokeStyle = cs.border || '#f26a1b'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); }
+  if (cs.glow) { ctx.save(); camPath(ctx, shape, w, vh); ctx.shadowColor = cs.border || '#1f6feb'; ctx.shadowBlur = 30; ctx.strokeStyle = cs.border || '#1f6feb'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); }
   ctx.save();
   if (a === 'circularReveal' || a === 'reveal') { ctx.beginPath(); if (a === 'circularReveal') ctx.arc(w / 2, vh / 2, Math.hypot(w, vh) / 2 * e, 0, 7); else ctx.rect(0, 0, w * e, vh); ctx.clip(); }
   camPath(ctx, shape, w, vh, cs.layout === 'card' ? Math.min(w, vh) * .06 : undefined); ctx.clip();
   const f = cam.frame(cs, w * (ctx.getTransform().a || 1), vh * (ctx.getTransform().d || 1));
   if (f) ctx.drawImage(f, 0, 0, w, vh); else { ctx.fillStyle = '#222'; ctx.fillRect(0, 0, w, vh); }
   ctx.restore();
-  if (cs.borderW > 0 && !full) { ctx.save(); camPath(ctx, shape, w, vh, cs.layout === 'card' ? Math.min(w, vh) * .06 : undefined); ctx.strokeStyle = cs.border || '#f26a1b'; ctx.lineWidth = cs.borderW; if (cs.borderStyle === 'dashed') ctx.setLineDash([cs.borderW * 3, cs.borderW * 2]); ctx.stroke(); ctx.restore(); }
+  if (cs.borderW > 0 && !full) { ctx.save(); camPath(ctx, shape, w, vh, cs.layout === 'card' ? Math.min(w, vh) * .06 : undefined); ctx.strokeStyle = cs.border || '#1f6feb'; ctx.lineWidth = cs.borderW; if (cs.borderStyle === 'dashed') ctx.setLineDash([cs.borderW * 3, cs.borderW * 2]); ctx.stroke(); ctx.restore(); }
   if ((cs.name || cs.title) && (cs.layout === 'card' || cs.showLabel)) {
     const fs = Math.max(11, (labelH || h * .16) * .38);
     ctx.fillStyle = cs.layout === 'card' ? '#fff' : 'rgba(0,0,0,.55)';
     if (cs.layout !== 'card') { ctx.fillRect(0, vh - fs * 2.6, w, fs * 2.6); ctx.fillStyle = '#fff'; }
     ctx.textAlign = 'center'; ctx.font = `700 ${fs}px Segoe UI, Arial`; ctx.direction = 'inherit';
     const ly = cs.layout === 'card' ? vh + labelH * .42 : vh - fs * 1.45;
-    ctx.fillText(cs.name || '', w / 2, ly); ctx.font = `${fs * .78}px Segoe UI, Arial`; ctx.fillStyle = cs.layout === 'card' ? (cs.border || '#f26a1b') : '#ddd'; ctx.fillText(cs.title || '', w / 2, ly + fs * 1.05);
+    ctx.fillText(cs.name || '', w / 2, ly); ctx.font = `${fs * .78}px Segoe UI, Arial`; ctx.fillStyle = cs.layout === 'card' ? (cs.border || '#1f6feb') : '#ddd'; ctx.fillText(cs.title || '', w / 2, ly + fs * 1.05);
   }
   if (cs.logo) { const img = getImage(cs.logo); if (img) { const lh = Math.min(w, h) * .14; ctx.drawImage(img, w - lh * img.naturalWidth / img.naturalHeight - 6, 6, lh * img.naturalWidth / img.naturalHeight, lh); } }
   ctx.restore();
@@ -199,7 +199,7 @@ export function drawCameraOverlay(ctx, cam, cs, r, enter = 1) {
 
 export const CAM_PRESETS = {
   minimal: { layout: 'bubble', shape: 'circle', borderW: 0, shadow: true, glow: false, size: .2 },
-  professional: { layout: 'bubble', shape: 'circle', borderW: 4, border: '#f26a1b', shadow: true, glow: false, size: .22 },
+  professional: { layout: 'bubble', shape: 'circle', borderW: 4, border: '#1f6feb', shadow: true, glow: false, size: .22 },
   teacher: { layout: 'card', shape: 'roundRect', borderW: 3, border: '#2a9d8f', shadow: true, size: .3, showLabel: true },
   webinar: { layout: 'side', side: 'right', split: .3, borderW: 0, shadow: false },
   news: { layout: 'pip', shape: 'rect', borderW: 3, border: '#e63946', shadow: true, size: .28, showLabel: true },

@@ -5,7 +5,7 @@ export const FORMAT_VERSION = 1;
 export const SIZES = { '16:9': { w: 1280, h: 720 }, '4:3': { w: 960, h: 720 }, 'A4': { w: 1123, h: 794 }, '1:1': { w: 1080, h: 1080 }, '9:16': { w: 720, h: 1280 } };
 
 export const THEMES = [
-  { id: 'lasteast', name: 'Lasteast', bg: '#ffffff', bg2: '#fff3ea', surface: '#fff7f0', text: '#1d1f24', muted: '#6b6f78', accent: '#f26a1b', accent2: '#d6361f', accent3: '#2b2f36', head: 'Poppins, Segoe UI, Arial', body: 'Inter, Segoe UI, Arial', style: 'swoosh' },
+  { id: 'lasteast', name: 'Lasteast', bg: '#ffffff', bg2: '#eef4ff', surface: '#fff7f0', text: '#1d1f24', muted: '#6b6f78', accent: '#1f6feb', accent2: '#1746b5', accent3: '#2b2f36', head: 'Poppins, Segoe UI, Arial', body: 'Inter, Segoe UI, Arial', style: 'swoosh' },
   { id: 'midnight', name: 'Midnight', bg: '#0f1222', bg2: '#1a1f3b', surface: '#1c2140', text: '#f2f4ff', muted: '#9aa3c7', accent: '#6c8cff', accent2: '#ff6fb1', accent3: '#36d6c3', head: 'Poppins, Segoe UI, Arial', body: 'Inter, Segoe UI, Arial', style: 'glow' },
   { id: 'ember', name: 'Ember', bg: '#1b1412', bg2: '#2b1a14', surface: '#2a1d18', text: '#fff4ec', muted: '#c9a99a', accent: '#ff7a2f', accent2: '#ffc24a', accent3: '#e2453c', head: 'Georgia, Times New Roman', body: 'Segoe UI, Arial', style: 'band' },
   { id: 'paper', name: 'Paper', bg: '#faf7f2', bg2: '#efe8dc', surface: '#ffffff', text: '#2a2723', muted: '#7c766c', accent: '#2f6f62', accent2: '#c0613b', accent3: '#3b4f7a', head: 'Georgia, Times New Roman', body: 'Georgia, Times New Roman', style: 'minimal' },
@@ -105,7 +105,7 @@ export function newDoc(themeId = 'lasteast', sizeKey = '16:9') {
 }
 
 export function defaultCamera() {
-  return { enabled: false, layout: 'bubble', shape: 'circle', corner: 'br', x: null, y: null, size: 0.22, border: '#f26a1b', borderW: 4, shadow: true, glow: false, mirror: true, opacity: 1, brightness: 100, contrast: 100, saturation: 100, zoom: 1, bgEffect: 'none', bgImage: null, edge: 0.5, name: '', title: '', preset: 'professional', autoAvoid: true, anim: 'zoomIn', side: 'right', split: 0.35 };
+  return { enabled: false, layout: 'bubble', shape: 'circle', corner: 'br', x: null, y: null, size: 0.22, border: '#1f6feb', borderW: 4, shadow: true, glow: false, mirror: true, opacity: 1, brightness: 100, contrast: 100, saturation: 100, zoom: 1, bgEffect: 'none', bgImage: null, edge: 0.5, name: '', title: '', preset: 'professional', autoAvoid: true, anim: 'zoomIn', side: 'right', split: 0.35 };
 }
 
 // Assets

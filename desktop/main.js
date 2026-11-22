@@ -41,7 +41,7 @@ function boot() {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1440, height: 900, minWidth: 960, minHeight: 600, title: 'Lasteast Present', backgroundColor: '#0d0f18', show: false,
+    width: 1440, height: 900, minWidth: 960, minHeight: 600, title: 'Lasteast Present', backgroundColor: '#0b1a3a', show: false,
     icon: path.join(__dirname, 'app', 'assets', 'icon-512.png'),
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, sandbox: true, spellcheck: true },
   });

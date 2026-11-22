@@ -241,13 +241,13 @@ Object.assign(CMD, {
 });
 
 // ---------- TRANSITION STUDIO ----------
-const thumbSrc = (() => { let c = null; return () => { if (c) return c; const mk = (bg, fg, txt, acc) => { const x = document.createElement('canvas'); x.width = 192; x.height = 108; const g = x.getContext('2d'); const gr = g.createLinearGradient(0, 0, 192, 108); gr.addColorStop(0, bg[0]); gr.addColorStop(1, bg[1]); g.fillStyle = gr; g.fillRect(0, 0, 192, 108); g.fillStyle = acc; g.beginPath(); g.arc(150, 30, 22, 0, 7); g.fill(); g.fillRect(16, 78, 70, 6); g.fillStyle = fg; g.font = '700 26px Segoe UI, Arial'; g.fillText(txt, 16, 60); return x; }; c = { a: mk(['#1b1f3b', '#0f1222'], '#fff', 'Ideas', '#6c8cff'), b: mk(['#fff3ea', '#ffd9bd'], '#1d1f24', 'Present', '#f26a1b') }; return c; }; })();
+const thumbSrc = (() => { let c = null; return () => { if (c) return c; const mk = (bg, fg, txt, acc) => { const x = document.createElement('canvas'); x.width = 192; x.height = 108; const g = x.getContext('2d'); const gr = g.createLinearGradient(0, 0, 192, 108); gr.addColorStop(0, bg[0]); gr.addColorStop(1, bg[1]); g.fillStyle = gr; g.fillRect(0, 0, 192, 108); g.fillStyle = acc; g.beginPath(); g.arc(150, 30, 22, 0, 7); g.fill(); g.fillRect(16, 78, 70, 6); g.fillStyle = fg; g.font = '700 26px Segoe UI, Arial'; g.fillText(txt, 16, 60); return x; }; c = { a: mk(['#1b1f3b', '#0f1222'], '#fff', 'Ideas', '#6c8cff'), b: mk(['#eef4ff', '#d6e6ff'], '#1d1f24', 'Present', '#1f6feb') }; return c; }; })();
 const miniDoc = { size: { w: 192, h: 108 }, theme: themeById('lasteast'), master: {}, assets: {}, lang: 'en' };
 function miniSlides() {
   const mk = (bg, objs) => ({ id: 's', bg: { type: 'solid', color: bg }, objects: objs, transition: {} });
   const o1 = { id: 'a', mid: 'm1', name: '!!orb', type: 'shape', shape: 'ellipse', x: 128, y: 8, w: 44, h: 44, rot: 0, opacity: 1, fill: '#6c8cff', stroke: 'none', text: '' }, t1 = { id: 'b', mid: 'm2', name: '!!t', type: 'text', shape: 'rect', fill: 'none', stroke: 'none', x: 12, y: 36, w: 120, h: 34, rot: 0, opacity: 1, text: 'Ideas', size: 24, bold: true, color: '#ffffff', font: 'Segoe UI', align: 'left', valign: 'middle', pad: 4, autofit: false, lineHeight: 1.2, paraSpace: 0, bullets: 'none', dir: 'ltr' };
-  const o2 = { ...o1, id: 'c', x: 18, y: 54, w: 36, h: 36, fill: '#f26a1b' }, t2 = { ...t1, id: 'd', x: 64, y: 22, text: 'Present', color: '#1d1f24', size: 26 }, bar = { id: 'e', mid: 'm3', type: 'shape', shape: 'roundRect', radius: 3, x: 64, y: 70, w: 90, h: 7, rot: 0, opacity: 1, fill: '#d6361f', stroke: 'none', text: '' };
-  return [mk('#141833', [o1, t1]), mk('#fff3ea', [o2, t2, bar])];
+  const o2 = { ...o1, id: 'c', x: 18, y: 54, w: 36, h: 36, fill: '#1f6feb' }, t2 = { ...t1, id: 'd', x: 64, y: 22, text: 'Present', color: '#1d1f24', size: 26 }, bar = { id: 'e', mid: 'm3', type: 'shape', shape: 'roundRect', radius: 3, x: 64, y: 70, w: 90, h: 7, rot: 0, opacity: 1, fill: '#1746b5', stroke: 'none', text: '' };
+  return [mk('#141833', [o1, t1]), mk('#eef4ff', [o2, t2, bar])];
 }
 const thumbLoops = new Set(), libLoops = new Set();
 function animThumb(c, id, auto) {
@@ -351,7 +351,7 @@ function cameraPane(b) {
         F('Size', rangeIn(cs.size, v => setS({ size: v }), { min: .08, max: .6, step: .01, pct: true })),
         F('Shape', selIn(CAM_SHAPES.map(x => [x, x]), cs.shape, v => setS({ shape: v }))),
         F('Layout', selIn([['bubble', 'Presenter Bubble'], ['pip', 'Picture-in-Picture'], ['card', 'Presenter Card'], ['side', 'Side-by-Side'], ['full', 'Full Presenter'], ['floating', 'Floating']], cs.layout, v => setS({ layout: v }))),
-        F('Border', el('input', { type: 'color', value: toHex(cs.border || '#f26a1b'), onchange: (e) => setS({ border: e.target.value }) })),
+        F('Border', el('input', { type: 'color', value: toHex(cs.border || '#1f6feb'), onchange: (e) => setS({ border: e.target.value }) })),
         F('Background', selIn([['none', 'None'], ['blurLight', 'Light Blur'], ['blur', 'Medium Blur'], ['blurStrong', 'Strong Blur'], ['office', 'Office'], ['classroom', 'Classroom'], ['studio', 'Studio'], ['interior', 'Modern Interior'], ['library', 'Library'], ['neutral', 'Neutral'], ['remove', 'Remove background']], cs.bgEffect, v => setS({ bgEffect: v }))),
         F('Presenter name', textIn(cs.name, v => setS({ name: v }))), F('Presenter title', textIn(cs.title, v => setS({ title: v }))),
       ] : null,

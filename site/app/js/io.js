@@ -126,7 +126,7 @@ export async function importPPTX(file, report) {
   if (themeRel && zip.file(themeRel.target)) {
     const tx = parseXml(await zip.file(themeRel.target).async('string')); const cs = deep(tx, 'clrScheme');
     const get = (n) => { const e = first(cs, n); if (!e) return null; const c = first(e, 'srgbClr'); return c ? '#' + c.getAttribute('val') : (first(e, 'sysClr') ? '#' + first(e, 'sysClr').getAttribute('lastClr') : null); };
-    if (cs) { themeRaw = { text: get('dk1') || '#000', bg: get('lt1') || '#fff', bg2: get('lt2') || '#eee', accent: get('accent1') || '#f26a1b', accent2: get('accent2') || '#d6361f', accent3: get('accent3') || '#333', muted: get('dk2') || '#666' }; Object.assign(doc.theme, themeRaw, { surface: themeRaw.bg2, id: 'imported', name: 'Imported', style: 'minimal' }); }
+    if (cs) { themeRaw = { text: get('dk1') || '#000', bg: get('lt1') || '#fff', bg2: get('lt2') || '#eee', accent: get('accent1') || '#1f6feb', accent2: get('accent2') || '#1746b5', accent3: get('accent3') || '#333', muted: get('dk2') || '#666' }; Object.assign(doc.theme, themeRaw, { surface: themeRaw.bg2, id: 'imported', name: 'Imported', style: 'minimal' }); }
     const maj = deep(deep(tx, 'majorFont'), 'latin'), min = deep(deep(tx, 'minorFont'), 'latin');
     if (maj) doc.theme.head = maj.getAttribute('typeface') + ', Segoe UI, Arial'; if (min) doc.theme.body = min.getAttribute('typeface') + ', Segoe UI, Arial';
     themeRaw = doc.theme;
@@ -288,7 +288,7 @@ export async function exportPPTX(doc, report) {
         const T = { column: 'bar', bar: 'bar', line: 'line', area: 'area', pie: 'pie', doughnut: 'doughnut', scatter: 'scatter', radar: 'radar', combo: 'bar', waterfall: 'bar' }[o.chartType];
         if (o.chartType === 'combo' || o.chartType === 'waterfall') issues.add(`${o.chartType} chart exported as a column chart`);
         const data = o.chartType === 'scatter' ? [{ name: 'X', values: o.data.labels.map(Number) }, ...o.data.series] : o.data.series.map(s => ({ name: s.name, labels: o.data.labels, values: s.values.map(Number) }));
-        sl.addChart(T, data, { ...P, barDir: o.chartType === 'bar' ? 'bar' : 'col', showLegend: o.showLegend, legendPos: 'b', showTitle: !!o.title, title: o.title, showValue: o.showLabels, chartColors: (o.palette || []).map(c => R(c)?.color || 'F26A1B') });
+        sl.addChart(T, data, { ...P, barDir: o.chartType === 'bar' ? 'bar' : 'col', showLegend: o.showLegend, legendPos: 'b', showTitle: !!o.title, title: o.title, showValue: o.showLabels, chartColors: (o.palette || []).map(c => R(c)?.color || '1F6FEB') });
       } else if (o.type === 'video' || o.type === 'audio') {
         const src = assetSrc(doc, o.asset); const ext = (src.match(/^data:\w+\/([\w+-]+)/) || [])[1] || 'mp4';
         try { sl.addMedia({ ...P, type: o.type, data: src, extn: ext === 'mpeg' ? 'mp3' : ext }); } catch (e) { issues.add('Some media could not be embedded'); }

@@ -204,12 +204,12 @@ const arrangeMenu = () => [[t('Bring to Front'), () => run('order', 'front')], [
 const quickStyles = () => [['@accent', '#ffffff', 'none'], ['@accent2', '#ffffff', 'none'], ['@accent3', '#ffffff', 'none'], ['none', '@accent', '@accent'], ['@surface', '@text', '@accent'], ['@text', '@bg', 'none']].map(([f, c, s], i) => [el('span', { class: 'qs', style: `background:${f === 'none' ? 'transparent' : resolveColor(f, E.doc.theme)};color:${resolveColor(c, E.doc.theme)};border:2px solid ${s === 'none' ? 'transparent' : resolveColor(s, E.doc.theme)}` }, 'Abc'), () => S({ fill: f, color: c, stroke: s, strokeW: s === 'none' ? 0 : 3, shadow: i < 3 ? { color: 'rgba(0,0,0,.25)', blur: 14, x: 0, y: 6 } : null })]);
 const wordartMenu = () => [
   ['Fill: Accent, Shadow', { color: '@accent', textShadow: { color: 'rgba(0,0,0,.35)', blur: 10, x: 4, y: 4 } }],
-  ['Gradient Fill: Sunset', { textGradient: { c1: '#ffb04a', c2: '#d6361f' } }],
+  ['Gradient Fill: Sunset', { textGradient: { c1: '#ffc83d', c2: '#1746b5' } }],
   ['Outline: Accent', { color: 'rgba(0,0,0,0)', textOutline: { color: '@accent', width: 3 } }],
   ['Glow: Neon', { color: '#18f0c8', glow: { color: '#18f0c8', size: 24 } }],
   ['Reflection', { color: '@text', reflection: true }],
   ['Bold Contrast', { color: '@bg', textOutline: { color: '@text', width: 6 }, textShadow: { color: '@accent', blur: 0, x: 6, y: 6 } }],
-].map(([l, st]) => (wordartStyles[t(l)] = st, [el('span', { class: 'wa', style: `color:${st.textGradient ? '#e65a1e' : resolveColor(st.color || '@text', E.doc.theme)};${st.textOutline ? `-webkit-text-stroke:1px ${resolveColor(st.textOutline.color, E.doc.theme)};` : ''}${st.glow ? `text-shadow:0 0 8px ${st.glow.color}` : ''}` }, 'A'), () => run('wordart', st), t(l)]));
+].map(([l, st]) => (wordartStyles[t(l)] = st, [el('span', { class: 'wa', style: `color:${st.textGradient ? '#1f6feb' : resolveColor(st.color || '@text', E.doc.theme)};${st.textOutline ? `-webkit-text-stroke:1px ${resolveColor(st.textOutline.color, E.doc.theme)};` : ''}${st.glow ? `text-shadow:0 0 8px ${st.glow.color}` : ''}` }, 'A'), () => run('wordart', st), t(l)]));
 const wordartMenu2 = () => wordartMenu().map(([lab, fn, l]) => [lab, () => { const st = wordartStyles[l]; if (st && selObjs().length) S(st, 'WordArt style'); else fn(); }, l]);
 const wordartStyles = {};
 export { animMenu };
