@@ -131,7 +131,7 @@ function optionsPane() {
 }
 export function about() {
   const v = window.LP_VERSION || '1.0.0';
-  return el('div', { class: 'about' }, el('div', { class: 'about-logo', html: ICONS.logo }), el('h2', {}, 'Lasteast Present'), el('div', { class: 'about-ed' }, 'Professional 2024'), el('p', { class: 'slogan' }, 'Ideas. Design. Present.'),
+  return el('div', { class: 'about' }, el('div', { class: 'about-logo', html: ICONS.logo }), el('h2', {}, 'Lasteast Present'), el('div', { class: 'about-ed' }, 'Professional 2027'), el('p', { class: 'slogan' }, 'Ideas. Design. Present.'),
     el('p', {}, t('Version') + ' ' + v + (window.lpDesktop ? ' · ' + t('Desktop') + ' (' + window.lpDesktop.platform + ')' : ' · ' + t('Web')) + ' · ' + navigator.userAgent.match(/(Chrome|Firefox|Safari|Edg)\/[\d.]+/)?.[0]),
     el('p', {}, t('Rendering') + ': ' + (document.createElement('canvas').getContext('webgl') ? 'WebGL ✓' : 'Canvas 2D (no WebGL)') + ' · ' + t('Recording') + ': ' + (pickMime() !== null ? (pickMime() || 'webm') : '—')),
     el('p', { class: 'p-note' }, t('Third-party components: PptxGenJS (MIT), jsPDF (MIT), JSZip (MIT/GPLv3). Optional online components: MediaPipe Tasks Vision (Apache-2.0) for camera background effects, PDF.js (Apache-2.0) for PDF import.')),

@@ -1,4 +1,4 @@
-// Lasteast Present Professional 2024 — desktop shell (Electron)
+// Lasteast Present Professional 2027 — desktop shell (Electron)
 const { app, BrowserWindow, protocol, net, ipcMain, session, desktopCapturer, Menu, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');

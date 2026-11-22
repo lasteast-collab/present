@@ -1,8 +1,8 @@
 {
   "name": "lasteast-present",
   "productName": "Lasteast Present",
-  "version": "1.1.1",
-  "description": "Lasteast Present Professional 2024 \u2014 Ideas. Design. Present.",
+  "version": "1.2.0",
+  "description": "Lasteast Present Professional 2027 \u2014 Ideas. Design. Present.",
   "author": {
     "name": "Lasteast",
     "email": "support@lasteast.app"
@@ -73,7 +73,7 @@
           ]
         }
       ],
-      "artifactName": "Lasteast-Present-Professional-2024-Setup.${ext}"
+      "artifactName": "Lasteast-Present-Professional-2027-Setup.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -83,13 +83,13 @@
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
       "shortcutName": "Lasteast Present",
-      "uninstallDisplayName": "Lasteast Present Professional 2024",
+      "uninstallDisplayName": "Lasteast Present Professional 2027",
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
       "installerSidebar": "build/installerSidebar.bmp",
       "uninstallerSidebar": "build/installerSidebar.bmp",
       "installerHeader": "build/installerHeader.bmp",
-      "artifactName": "Lasteast-Present-Professional-2024-Setup.${ext}",
+      "artifactName": "Lasteast-Present-Professional-2027-Setup.${ext}",
       "menuCategory": "Lasteast",
       "deleteAppDataOnUninstall": false,
       "license": "build/license.txt"
@@ -113,7 +113,7 @@
           ]
         }
       ],
-      "artifactName": "Lasteast-Present-Professional-2024-mac-${arch}.${ext}",
+      "artifactName": "Lasteast-Present-Professional-2027-mac-${arch}.${ext}",
       "hardenedRuntime": false,
       "identity": null,
       "extendInfo": {
@@ -123,7 +123,7 @@
     },
     "dmg": {
       "title": "Lasteast Present",
-      "artifactName": "Lasteast-Present-Professional-2024-mac-${arch}.${ext}"
+      "artifactName": "Lasteast-Present-Professional-2027-mac-${arch}.${ext}"
     },
     "linux": {
       "icon": "build/icon.png",
@@ -143,17 +143,17 @@
           ]
         }
       ],
-      "artifactName": "Lasteast-Present-Professional-2024-${arch}.${ext}",
+      "artifactName": "Lasteast-Present-Professional-2027-${arch}.${ext}",
       "mimeTypes": [
         "application/x-lasteast-presentation",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation"
       ]
     },
     "appImage": {
-      "artifactName": "Lasteast-Present-Professional-2024-x86_64.${ext}"
+      "artifactName": "Lasteast-Present-Professional-2027-x86_64.${ext}"
     },
     "deb": {
-      "artifactName": "Lasteast-Present-Professional-2024-amd64.${ext}",
+      "artifactName": "Lasteast-Present-Professional-2027-amd64.${ext}",
       "maintainer": "Lasteast <support@lasteast.app>"
     }
   }

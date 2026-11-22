@@ -11,7 +11,7 @@ import * as D from './dialogs.js';
 import { startAudience } from './slideshow.js';
 import { SIGNATURE, getT } from './transitions.js';
 
-window.LP_VERSION = '1.1.1';
+window.LP_VERSION = '1.2.0';
 window.__shapePts = (s) => s === 'line' || s === 'arrowLine' ? null : shapePoints(s, 24, 24, 5).map(p => p.map(v => v.toFixed(1)).join(',')).join(' ');
 document.body.dataset.theme = E.prefs.uiTheme;
 const app = $('#app'), home = $('#home');
@@ -48,7 +48,7 @@ async function showHome(section = 'home') {
   const recent = await IO.recentList();
   home.innerHTML = '';
   const nav = el('nav', { class: 'h-nav' },
-    el('div', { class: 'h-brand' }, el('span', { class: 'h-logo', html: ICONS.logo }), el('div', {}, el('b', {}, 'Lasteast Present'), el('small', {}, 'Professional 2024'))),
+    el('div', { class: 'h-brand' }, el('span', { class: 'h-logo', html: ICONS.logo }), el('div', {}, el('b', {}, 'Lasteast Present'), el('small', {}, 'Professional 2027'))),
     ...[['home', 'home', 'Home'], ['new', 'newslide', 'New'], ['open', 'folder', 'Open'], ['templates', 'themes', 'Templates'], ['recover', 'history', 'Recover']].map(([k, ic, l]) => el('button', { class: 'h-nav-i' + (homeSection === k ? ' on' : ''), onclick: () => k === 'open' ? openDialog() : showHome(k) }, el('span', { class: 'ic', html: ICONS[ic] }), t(l))),
     el('div', { class: 'h-spacer' }),
     el('select', { class: 'tb-lang', title: t('Interface language'), onchange: (e) => setLang(e.target.value) }, ...[['en', 'English'], ['he', 'עברית'], ['ar', 'العربية']].map(([v, n]) => el('option', { value: v, selected: getLang() === v }, n))),

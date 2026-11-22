@@ -349,7 +349,7 @@ export async function exportPDF(doc, { includeHidden = false, mode = 'slides' } 
     const c = renderToCanvas(doc, s, W * 2, { present: true, index: i }); pdf.addImage(c.toDataURL('image/jpeg', .92), 'JPEG', 0, 0, W, H);
     for (const o of s.objects) if (o.link) { if (o.link.type === 'url') pdf.link(o.x, o.y, o.w, o.h, { url: o.link.url }); }
   }
-  pdf.setProperties({ title: doc.title, creator: 'Lasteast Present Professional 2024' });
+  pdf.setProperties({ title: doc.title, creator: 'Lasteast Present Professional 2027' });
   return pdf.output('blob');
 }
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -384,7 +384,7 @@ export async function exportSVG(doc, index) {
 export async function exportHTML(doc) {
   const imgs = await slideImages(doc, { width: 1920, type: 'image/jpeg', quality: .88 });
   const slides = []; for (const { i, canvas } of imgs) slides.push({ src: canvas.toDataURL('image/jpeg', .88), notes: doc.slides[i].notes || '', tr: doc.slides[i].transition?.type || 'none', dur: doc.slides[i].transition?.duration || .8, after: doc.slides[i].transition?.after ?? null });
-  const html = `<!DOCTYPE html><html lang="${doc.lang || 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(doc.title)}</title><meta name="generator" content="Lasteast Present Professional 2024">
+  const html = `<!DOCTYPE html><html lang="${doc.lang || 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(doc.title)}</title><meta name="generator" content="Lasteast Present Professional 2027">
 <style>html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Segoe UI,Arial,sans-serif}#s{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}#s img{position:absolute;max-width:100%;max-height:100%;transition-property:opacity,transform;transition-timing-function:ease-in-out}.bar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);color:#fff;background:#0008;padding:6px 14px;border-radius:20px;font-size:13px;opacity:.0;transition:opacity .3s}body:hover .bar{opacity:1}.bar button{background:none;border:0;color:#fff;font-size:18px;cursor:pointer}</style></head>
 <body><div id="s"></div><div class="bar"><button onclick="go(i-1)">&#8592;</button> <span id="n"></span> <button onclick="go(i+1)">&#8594;</button> <button onclick="document.documentElement.requestFullscreen()">&#x26F6;</button></div>
 <script>const S=${JSON.stringify(slides)};let i=-1,cur=null,tm;const s=document.getElementById('s');
