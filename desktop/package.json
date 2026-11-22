@@ -1,7 +1,7 @@
 {
   "name": "lasteast-present",
   "productName": "Lasteast Present",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lasteast Present Professional 2024 \u2014 Ideas. Design. Present.",
   "author": {
     "name": "Lasteast",
@@ -53,14 +53,14 @@
         "name": "Lasteast Presentation",
         "description": "Lasteast Presentation",
         "role": "Editor",
-        "icon": "doc"
+        "icon": "lpres"
       },
       {
         "ext": "pptx",
         "name": "PowerPoint Presentation",
         "description": "PowerPoint Presentation",
         "role": "Editor",
-        "icon": "doc"
+        "icon": "pptxdoc"
       }
     ],
     "win": {
