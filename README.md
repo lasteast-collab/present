@@ -35,6 +35,6 @@ cd desktop && npm install && npm start   # desktop app
 
 ## Release
 ```bash
-git tag v1.0.1 && git push origin v1.0.1   # GitHub Actions builds Windows, macOS and Linux installers
+git push   # any change to desktop/ or site/app/ on main (or a v* tag) builds Windows, macOS and Linux installers
 ```
 Bump `desktop/package.json` → `version` first. The first builds are not code-signed (SmartScreen / Gatekeeper will warn).

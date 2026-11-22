@@ -3,7 +3,13 @@ name: Build desktop installers
 on:
   push:
     tags: ['v*']
+    branches: [main]
+    paths: ['desktop/**', 'site/app/**', '.github/workflows/release.yml']
   workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
