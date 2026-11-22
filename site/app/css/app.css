@@ -182,3 +182,37 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}input[type=rang
 .aud-wait{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;color:#aaa;font-size:20px;gap:8px}
 /* print area is handled in io.js */
 @media (max-width:900px){.slides-panel{width:120px}.side-panel{position:absolute;inset-inline-end:0;top:0;bottom:0;z-index:20;box-shadow:var(--shadow)}.h-nav{width:64px}.h-nav-i{font-size:0;justify-content:center}.h-brand div,.h-nav .tb-lang{display:none}.diag,.master-wrap,.ss{grid-template-columns:1fr}.diag-prev,.master-prev{width:100%}}
+/* ===== v1.1 usability pass: bigger UI, PowerPoint-like workspace ===== */
+body{font-size:14px}
+.r-tab{padding:9px 15px;font-size:14px}.r-tab.ctx{color:#b4470f;background:var(--brand-soft);border-radius:4px 4px 0 0;font-weight:600}.r-tab.ctx.on{color:var(--brand);background:var(--panel)}
+.r-body{min-height:108px;padding:6px 6px 0}.r-group{padding:0 8px}.r-label{font-size:12px}
+.r-big{min-width:62px;max-width:92px;font-size:12.5px;padding:5px 7px}.r-big .ic,.r-big .ic svg{width:32px;height:32px}
+.r-sm{font-size:13px;min-height:28px;padding:3px 7px}.r-sm .ic,.r-sm .ic svg{width:18px;height:18px}.r-sm.icon-only{padding:5px;min-width:30px;justify-content:center}
+.r-select{height:28px;font-size:13px}.r-num{height:28px;width:70px}.r-lab{font-size:13px}.r-chk{font-size:13px}
+.r-gallery{scrollbar-width:thin;grid-template-rows:repeat(2,40px)}.r-gallery::-webkit-scrollbar{height:6px}
+.theme-tile{width:96px;height:70px}
+.qs-gal{grid-template-rows:repeat(2,38px)}.qs-tile{min-width:86px;padding:2px 6px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font-size:12px}.qs-tile:hover{border-color:var(--brand)}.qs-tile .qs{display:block;text-align:center}
+.titlebar{height:44px}.tb-btn svg{width:19px;height:19px}.tb-title{font-size:15px}
+/* workspace */
+.slides-panel{width:200px}
+.stage-wrap{display:flex;overflow:auto}.stage-wrap .stage{margin:auto;flex-shrink:0}.stage-wrap.fit{overflow:hidden}
+.stage-wrap.with-rulers{padding:18px 0 0;padding-inline-start:18px}
+.ruler-h{position:absolute;top:0;left:0;right:0;width:100%}.ruler-v{position:absolute;top:0}
+.notes-pane{height:64px}.notes-pane textarea{font-size:14px;padding:6px 14px}
+/* task pane */
+.side-panel{width:340px;transition:width .15s}.side-panel.collapsed{width:0;border:0;overflow:hidden}.p-collapse{display:none}
+.p-head{display:flex;align-items:center;gap:8px;padding:10px 12px 6px}.p-title{flex:1;font:600 16px var(--font)}.p-close{background:none;border:0;font-size:16px;width:30px;height:30px;border-radius:6px;color:var(--muted)}.p-close:hover{background:var(--hover);color:var(--text)}
+.p-tab{font-size:13px;padding:8px 9px}
+.p-body{font-size:13.5px;padding:8px 12px 40px}.p-f{font-size:13px}.p-body input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),.p-body select{padding:5px 7px;min-height:30px}
+.p-sec>summary{font-size:14px;padding:6px 0}.btn{padding:7px 13px}.btn.sm{padding:5px 10px;font-size:13px}
+.statusbar{height:30px;font-size:13px}.sb-ic svg{width:17px;height:17px}.sb-ic,.sb-link{padding:4px 7px}
+.m-item{padding:8px 12px;font-size:14px}.menu{min-width:200px}
+.dialog{font-size:14px}.d-form input,.d-form select{min-height:32px}
+.hd{width:12px;height:12px;margin:-6px}.hd-rot{width:16px;height:16px;margin-left:-8px}
+@media (max-width:1100px){.slides-panel{width:150px}.side-panel{width:300px}}
+.r-items:not(:has(> :not(.r-row))){flex-direction:column;align-items:flex-start;gap:3px}
+.r-body{scroll-behavior:smooth;scrollbar-width:none}.r-body::-webkit-scrollbar{display:none}
+.ribbon{position:relative}.r-scroll{position:absolute;top:44px;bottom:0;width:26px;border:0;z-index:2;background:linear-gradient(90deg,var(--panel) 60%,transparent);color:var(--brand);font-size:20px;display:none}.r-scroll.l{left:0}.r-scroll.r{right:0;background:linear-gradient(270deg,var(--panel) 60%,transparent)}.ribbon.ovl .r-scroll.l,.ribbon.ovr .r-scroll.r{display:block}
+.p-grid2>*,.p-grid4>*,.grid2>*{min-width:0}.p-body input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),.p-body select,.p-body textarea{width:100%;max-width:100%}.p-range{min-width:0}.p-range input{min-width:0}
+.p-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.p-tab{white-space:nowrap}
+.r-tab{padding:7px 14px}.r-body{min-height:98px;padding-top:4px}.r-big .ic,.r-big .ic svg{width:30px;height:30px}.r-scroll{top:38px}.notes-pane{height:52px}.titlebar{height:42px}

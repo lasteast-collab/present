@@ -19,13 +19,14 @@ const PANES = [['format', 'Format'], ['animations', 'Animations'], ['transitions
 export function buildPanel(root) {
   side = root; side.innerHTML = '';
   tabsEl = el('div', { class: 'p-tabs' }); bodyEl = el('div', { class: 'p-body' });
-  side.append(tabsEl, bodyEl, el('button', { class: 'p-collapse', title: t('Hide pane'), onclick: () => side.classList.toggle('collapsed') }, '›'));
+  side.append(el('div', { class: 'p-head' }, el('b', { class: 'p-title' }), el('button', { class: 'p-close', title: t('Close'), 'aria-label': t('Close'), onclick: () => run('closePane') }, '\u2715')), tabsEl, bodyEl);
   refreshPanel(true);
 }
 let lastKey = '';
 export function refreshPanel(force = false) {
   if (!bodyEl || !E.doc) return;
   const p = E.prefs.panel || 'format';
+  const pt = side.querySelector('.p-title'); if (pt) pt.textContent = t(({ format: selObjs().length ? 'Format Shape' : 'Format Background', animations: 'Animation Pane', transitions: 'Transition Studio', camera: 'Camera', comments: 'Comments', layers: 'Selection Pane', ai: 'AI Assistant' })[p]);
   tabsEl.innerHTML = ''; for (const [k, l] of PANES) tabsEl.append(el('button', { class: 'p-tab' + (k === p ? ' on' : ''), onclick: () => run('panel', k) }, t(l)));
   // avoid rebuilding while user types in a pane field
   const key = p + '|' + E.cur + '|' + E.sel.join(',') + '|' + (E.doc.slides.length);

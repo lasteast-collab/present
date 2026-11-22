@@ -5,7 +5,7 @@ export const CMD = {};
 export const E = {
   doc: null, cur: 0, sel: [], zoom: 1, fit: true, view: 'normal', readOnly: false,
   history: [], future: [], clipboard: null, painter: null, animPainter: null,
-  prefs: Object.assign({ grid: false, ruler: true, guides: true, snap: true, gridSize: 20, colorMode: 'color', uiTheme: 'light', perf: false, spell: true, autosave: true, notes: true, panel: 'format', multiDisplay: false, captions: false }, JSON.parse(localStorage.getItem('lp.prefs') || '{}')),
+  prefs: Object.assign({ grid: false, ruler: false, sideOpen: false, uiSize: 'normal', guides: true, snap: true, gridSize: 20, colorMode: 'color', uiTheme: 'light', perf: false, spell: true, autosave: true, notes: true, panel: 'format', multiDisplay: false, captions: false }, (() => { const p = JSON.parse(localStorage.getItem('lp.prefs') || '{}'); if (!p.v2) { delete p.ruler; delete p.sideOpen; p.v2 = true; } return p; })()),
   favorites: new Set(JSON.parse(localStorage.getItem('lp.favT') || '[]')), recentT: JSON.parse(localStorage.getItem('lp.recentT') || '[]'),
 };
 export const savePrefs = () => localStorage.setItem('lp.prefs', JSON.stringify(E.prefs));

@@ -15,17 +15,27 @@ let cur = localStorage.getItem('lp.tab') || 'Home', body, stateFns = [];
 export const FONTS = ['Segoe UI', 'Arial', 'Calibri', 'Aptos', 'Inter', 'Poppins', 'Helvetica Neue', 'Times New Roman', 'Georgia', 'Garamond', 'Verdana', 'Trebuchet MS', 'Tahoma', 'Consolas', 'Courier New', 'Impact', 'Comic Sans MS', 'David', 'FrankRuehl', 'Miriam', 'Narkisim', 'Noto Sans Hebrew', 'Rubik', 'Assistant', 'Heebo', 'Noto Sans Arabic', 'Noto Naskh Arabic', 'Amiri', 'Cairo', 'Tajawal', 'Arial Unicode MS'];
 export const SIZES_PT = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 96, 120, 144, 180];
 
+let rootEl = null, ctxShown = null;
+const ctxTab = () => { const os = selObjs(); if (!os.length) return null; return os.every(o => o.type === 'image') ? 'Picture Format' : os.every(o => o.type === 'table') ? 'Table Design' : os.every(o => o.type === 'chart') ? 'Chart Design' : 'Shape Format'; };
 export function buildRibbon(root) {
-  stateFns = [];
+  rootEl = root; stateFns = [];
+  const ctx = ctxTab(); ctxShown = ctx;
+  if (!ctx && /Format|Design$/.test(cur) && !TABS.includes(cur)) cur = 'Home';
+  if (ctx && /Format$|Table Design|Chart Design/.test(cur) && cur !== ctx) cur = ctx;
   const tabs = el('div', { class: 'r-tabs', role: 'tablist' });
-  for (const tb of TABS) tabs.append(el('button', { class: 'r-tab' + (tb === cur ? ' on' : '') + (tb === 'File' ? ' file' : '') + (tb === 'AI' ? ' ai' : ''), role: 'tab', 'data-tab': tb, onclick: () => { if (tb === 'File') return D.backstage(); cur = tb; localStorage.setItem('lp.tab', tb); buildRibbon(root); } }, t(tb)));
+  for (const tb of [...TABS, ...(ctx ? [ctx] : [])]) tabs.append(el('button', { class: 'r-tab' + (tb === cur ? ' on' : '') + (tb === 'File' ? ' file' : '') + (tb === 'AI' ? ' ai' : '') + (tb === ctx ? ' ctx' : ''), role: 'tab', 'data-tab': tb, onclick: () => { if (tb === 'File') return D.backstage(); cur = tb; localStorage.setItem('lp.tab', tb); buildRibbon(root); } }, t(tb)));
   tabs.append(el('button', { class: 'r-collapse', title: t('Collapse ribbon'), onclick: () => root.classList.toggle('collapsed') }, '˄'));
   body = el('div', { class: 'r-body' });
   root.innerHTML = ''; root.append(tabs, body);
-  (BUILD[cur] || BUILD.Home)();
+  const sl = el('button', { class: 'r-scroll l', 'aria-label': 'scroll', onclick: () => body.scrollBy({ left: -300 }) }, '\u2039'), sr = el('button', { class: 'r-scroll r', 'aria-label': 'scroll', onclick: () => body.scrollBy({ left: 300 }) }, '\u203A');
+  root.append(sl, sr);
+  const upd = () => { const max = body.scrollWidth - body.clientWidth, x = Math.abs(body.scrollLeft), rtl = getComputedStyle(body).direction === 'rtl'; const a = max > 4 && x > 4, b = max > 4 && x < max - 4; root.classList.toggle('ovl', rtl ? b : a); root.classList.toggle('ovr', rtl ? a : b); };
+  body.addEventListener('scroll', upd); new ResizeObserver(upd).observe(body); setTimeout(upd, 50);
+  body.addEventListener('wheel', (e) => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && body.scrollWidth > body.clientWidth) { e.preventDefault(); body.scrollBy({ left: e.deltaY }); } }, { passive: false });
+  (BUILD[cur] || (/Format$|Table Design|Chart Design/.test(cur) ? BUILD.Format : BUILD.Home))();
   updateState();
 }
-on('ribbonState', () => updateState()); on('select', () => updateState()); on('change', () => updateState()); on('slide', () => updateState());
+on('ribbonState', () => updateState()); on('select', () => { if (rootEl && ctxTab() !== ctxShown) buildRibbon(rootEl); else updateState(); }); on('change', () => updateState()); on('slide', () => updateState());
 function updateState() { for (const f of stateFns) try { f(); } catch (e) { } }
 
 // ---- builders ----
@@ -58,6 +68,7 @@ function colorBtn(ic, label, get, set) {
   const b = sm(ic, label, () => D.colorMenu(b, set, inp), { iconOnly: true, swatch: () => { const v = get(); return v ? resolveColor(v, E.doc.theme) : null; } });
   return el('span', { class: 'color-wrap' }, b, inp);
 }
+function colorBtnL(ic, label, get, set) { const inp = el('input', { type: 'color', class: 'hidden-color', oninput: (e) => set(e.target.value) }); const b = sm(ic, label, () => D.colorMenu(b, set, inp), { swatch: () => { const v = get(); return v ? resolveColor(v, E.doc.theme) : null; } }); return el('span', { class: 'color-wrap' }, b, inp); }
 const num = (get, set, opts = {}) => { const i = el('input', { type: 'number', class: 'r-num', step: opts.step || .1, min: opts.min ?? 0, max: opts.max ?? 999, title: t(opts.tip || ''), onchange: (e) => set(+e.target.value) }); stateFns.push(() => { if (document.activeElement !== i) { const v = get(); i.value = v ?? ''; } }); return i; };
 const chk = (label, get, set) => { const i = el('input', { type: 'checkbox', onchange: (e) => set(e.target.checked) }); stateFns.push(() => i.checked = !!get()); return el('label', { class: 'r-chk' }, i, ' ', t(label)); };
 
@@ -70,7 +81,24 @@ const forTr = () => (E.slideSel?.size ? [...E.slideSel] : [E.cur]);
 export const shapeMenu = (fn) => SHAPES.map(s => [el('span', { class: 'shape-ic', html: shapeSvg(s) }), () => fn(s), s]);
 export function shapeSvg(s) { const pts = (function () { try { return window.__shapePts(s); } catch (e) { return null; } })(); return pts ? `<svg viewBox="-2 -2 28 28"><polygon points="${pts}" fill="currentColor" opacity=".85"/></svg>` : `<svg viewBox="0 0 24 24"><path d="M2 12h20" stroke="currentColor" stroke-width="2.5" ${s === 'arrowLine' ? 'marker-end="url(#)"' : ''}/>${s === 'arrowLine' ? '<path d="M16 7l6 5-6 5" fill="none" stroke="currentColor" stroke-width="2.5"/>' : ''}</svg>`; }
 
+const effMenu = () => [[t('Shadow'), () => S(o => ({ shadow: o.shadow ? null : { color: 'rgba(0,0,0,.35)', blur: 18, x: 6, y: 8 } }))], [t('Glow'), () => S(o => ({ glow: o.glow ? null : { color: '@accent', size: 24 } }))], [t('Reflection'), () => S(o => ({ reflection: !o.reflection }))], [t('Soft shadow (subtle)'), () => S({ shadow: { color: 'rgba(0,0,0,.18)', blur: 30, x: 0, y: 10 } })], [t('No effects'), () => S({ shadow: null, glow: null, reflection: false })]];
 const BUILD = {
+  Format() {
+    const o = () => selObjs()[0]; const types = new Set(selObjs().map(x => x.type));
+    if (types.has('shape') || types.has('text')) {
+      grp('Insert Shapes', big('shapes', 'Shapes', null, { menu: () => shapeMenu(sh => run('insertMode', 'shape:' + sh)) }), col(sm('shapes', 'Change Shape', null, { menu: () => shapeMenu(sh => S({ shape: sh, type: 'shape' }, 'Change shape')) }), sm('textbox', 'Text Box', () => run('insertMode', 'text'))));
+      grp('Shape Styles', el('div', { class: 'r-gallery qs-gal' }, ...quickStyles().map(([lab, fn]) => el('button', { class: 'qs-tile', onclick: fn }, lab))), col(colorBtnL('fill', 'Shape Fill', () => typeof o()?.fill === 'string' ? o().fill : null, (c) => S({ fill: c })), colorBtnL('outline', 'Shape Outline', () => o()?.stroke, (c) => S({ stroke: c, strokeW: Math.max(2, o()?.strokeW || 0) })), sm('wand', 'Shape Effects', null, { menu: effMenu })));
+      grp('WordArt Styles', big('wordart', 'Quick Styles', null, { menu: wordartMenu2 }), col(colorBtnL('fontColor', 'Text Fill', () => o()?.color, (c) => S({ color: c })), colorBtnL('outline', 'Text Outline', () => o()?.textOutline?.color, (c) => S({ textOutline: c === 'none' ? null : { color: c, width: 2 } })), sm('wand', 'Text Effects', null, { menu: () => [[t('Shadow'), () => S(q => ({ textShadow: q.textShadow ? null : { color: 'rgba(0,0,0,.4)', blur: 8, x: 3, y: 3 } }))], [t('Glow'), () => S(q => ({ glow: q.glow ? null : { color: '@accent', size: 20 } }))], [t('Gradient text'), () => S(q => ({ textGradient: q.textGradient ? null : { c1: '@accent', c2: '@accent2' } }))], [t('Reflection'), () => S(q => ({ reflection: !q.reflection }))]] })));
+    }
+    if (types.has('image')) {
+      grp('Adjust', big('sun', 'Corrections', null, { menu: () => [[t('Brighter'), () => S(q => ({ filters: { ...q.filters, brightness: (q.filters?.brightness ?? 100) + 15 } }))], [t('Darker'), () => S(q => ({ filters: { ...q.filters, brightness: (q.filters?.brightness ?? 100) - 15 } }))], [t('More contrast'), () => S(q => ({ filters: { ...q.filters, contrast: (q.filters?.contrast ?? 100) + 15 } }))], [t('Less contrast'), () => S(q => ({ filters: { ...q.filters, contrast: (q.filters?.contrast ?? 100) - 15 } }))], '-', [t('Reset Picture'), () => S({ filters: {} })]] }), big('colors', 'Color', null, { menu: () => [['Original', {}], ['Grayscale', { grayscale: 100 }], ['Sepia', { sepia: 80 }], ['Vivid', { saturate: 160, contrast: 110 }], ['Washout', { brightness: 130, contrast: 70 }], ['Cool', { hue: 190, saturate: 80 }], ['Warm', { sepia: 30, saturate: 130 }]].map(([l, f]) => [t(l), () => S({ filters: f }, 'Picture color')]) }), col(sm('wipe', 'Remove Background', () => run('removeBg', o())), sm('picture', 'Compress Pictures', () => run('compressImage', o())), sm('reset', 'Reset Picture', () => S({ crop: { l: 0, t: 0, r: 0, b: 0 }, filters: {}, mask: 'rect', radius: 0 }))));
+      grp('Picture Styles', el('div', { class: 'r-gallery qs-gal' }, ...[['Simple frame', { stroke: '#ffffff', strokeW: 8, shadow: { color: 'rgba(0,0,0,.3)', blur: 16, x: 0, y: 6 }, mask: 'rect', radius: 0 }], ['Rounded', { radius: 28, mask: 'rect', stroke: 'none', strokeW: 0, shadow: { color: 'rgba(0,0,0,.25)', blur: 20, x: 0, y: 8 } }], ['Circle', { mask: 'ellipse', stroke: 'none', strokeW: 0 }], ['Soft edge', { radius: 12, shadow: { color: 'rgba(0,0,0,.18)', blur: 30, x: 0, y: 10 } }], ['Accent border', { stroke: '@accent', strokeW: 6, radius: 0, mask: 'rect' }], ['Reflected', { reflection: true, radius: 10 }]].map(([l, st]) => el('button', { class: 'qs-tile', onclick: () => S(st, 'Picture style') }, t(l)))), col(colorBtnL('outline', 'Picture Border', () => o()?.stroke, (c) => S({ stroke: c, strokeW: Math.max(4, o()?.strokeW || 0) })), sm('wand', 'Picture Effects', null, { menu: effMenu }), sm('crop', 'Crop to Shape', null, { menu: () => shapeMenu(sh => S({ mask: sh === 'rect' ? 'rect' : sh })) })));
+    }
+    if (types.has('table')) grp('Table', big('table', 'Table Options', () => run('panel', 'format')), col(sm('plus', 'Insert Row Below', () => { const q = o(); commit('Insert row', () => { q.cells.push(q.cells[0].map(() => ({ text: '' }))); q.rowH = null; q.h += 40; }); }), sm('plus', 'Insert Column Right', () => { const q = o(); commit('Insert column', () => { q.cells.forEach(r => r.push({ text: '' })); q.colW = null; }); })), col(chk('Header Row', () => o()?.header, (v) => S({ header: v })), chk('Banded Rows', () => o()?.band, (v) => S({ band: v }))));
+    if (types.has('chart')) grp('Chart', big('chart', 'Edit Data', () => D.chartData(o())), big('chart', 'Change Chart Type', null, { menu: () => CHART_TYPES.map(c => [t(c), () => S({ chartType: c })]) }), col(chk('Legend', () => o()?.showLegend, (v) => S({ showLegend: v })), chk('Data labels', () => o()?.showLabels, (v) => S({ showLabels: v }))));
+    grp('Arrange', col(sm('front', 'Bring Forward', () => run('order', 'forward')), sm('back', 'Send Backward', () => run('order', 'backward')), sm('pane', 'Selection Pane', () => run('panel', 'layers'))), col(sm('alignObj', 'Align', null, { menu: () => arrangeMenu().slice(5, 13) }), sm('group', 'Group', null, { menu: () => [[t('Group'), () => run('group')], [t('Ungroup'), () => run('ungroup')]] }), sm('reset', 'Rotate', null, { menu: () => arrangeMenu().slice(-4) })));
+    grp('Size', col(row(el('span', { class: 'r-lab' }, t('Height') + ':'), num(() => o() && Math.round(o().h), (v) => S(q => ({ h: v, w: (q.type === 'image' ? q.w * v / q.h : q.w) }), 'Resize'), { min: 1, max: 9999, step: 1 })), row(el('span', { class: 'r-lab' }, t('Width') + ':'), num(() => o() && Math.round(o().w), (v) => S(q => ({ w: v, h: (q.type === 'image' ? q.h * v / q.w : q.h) }), 'Resize'), { min: 1, max: 9999, step: 1 }))), big('pane', 'Format Pane', () => run('panel', 'format')));
+  },
   Home() {
     grp('Clipboard', big('paste', 'Paste', () => run('paste'), { tip: 'Paste (Ctrl+V)' }), col(sm('cut', 'Cut', () => run('cut')), sm('copy', 'Copy', () => run('copy')), sm('painter', 'Format Painter', () => run('formatPainter'), { active: () => E.painter })));
     grp('Slides', big('newslide', 'New Slide', () => run('newSlide'), { menu: layoutMenu }), col(sm('layoutSlide', 'Layout', null, { menu: () => layoutItems('layout') }), sm('reset', 'Reset', () => run('resetSlide')), sm('duplicate', 'Duplicate Slide', () => run('duplicateSlide'))), col(sm('trash', 'Delete Slide', () => run('deleteSlide')), sm('hide', 'Hide Slide', () => run('hideSlide'), { active: () => slide()?.hidden })));
@@ -181,5 +209,7 @@ const wordartMenu = () => [
   ['Glow: Neon', { color: '#18f0c8', glow: { color: '#18f0c8', size: 24 } }],
   ['Reflection', { color: '@text', reflection: true }],
   ['Bold Contrast', { color: '@bg', textOutline: { color: '@text', width: 6 }, textShadow: { color: '@accent', blur: 0, x: 6, y: 6 } }],
-].map(([l, st]) => [el('span', { class: 'wa', style: `color:${st.textGradient ? '#e65a1e' : resolveColor(st.color || '@text', E.doc.theme)};${st.textOutline ? `-webkit-text-stroke:1px ${resolveColor(st.textOutline.color, E.doc.theme)};` : ''}${st.glow ? `text-shadow:0 0 8px ${st.glow.color}` : ''}` }, 'A'), () => run('wordart', st), t(l)]);
+].map(([l, st]) => (wordartStyles[t(l)] = st, [el('span', { class: 'wa', style: `color:${st.textGradient ? '#e65a1e' : resolveColor(st.color || '@text', E.doc.theme)};${st.textOutline ? `-webkit-text-stroke:1px ${resolveColor(st.textOutline.color, E.doc.theme)};` : ''}${st.glow ? `text-shadow:0 0 8px ${st.glow.color}` : ''}` }, 'A'), () => run('wordart', st), t(l)]));
+const wordartMenu2 = () => wordartMenu().map(([lab, fn, l]) => [lab, () => { const st = wordartStyles[l]; if (st && selObjs().length) S(st, 'WordArt style'); else fn(); }, l]);
+const wordartStyles = {};
 export { animMenu };

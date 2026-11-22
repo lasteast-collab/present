@@ -42,7 +42,7 @@ export function mountEditor(root) {
           el('canvas', { class: 'ruler-h' }), el('canvas', { class: 'ruler-v' }),
           el('div', { class: 'stage', id: 'stage' }, stage = el('canvas', { class: 'stage-canvas' }), overlay = el('canvas', { class: 'stage-overlay' }), handles = el('div', { class: 'handles' }))),
         notesEl = el('div', { class: 'notes-pane' + (E.prefs.notes ? '' : ' hidden') }, el('div', { class: 'notes-resize' }), el('textarea', { placeholder: t('Click to add notes'), dir: 'auto', spellcheck: E.prefs.spell, oninput: (e) => commit('Notes', () => slide().notes = e.target.value, { merge: true }) }))),
-      el('div', { class: 'side-panel', id: 'side' })),
+      el('div', { class: 'side-panel' + (E.prefs.sideOpen ? '' : ' collapsed'), id: 'side' })),
     statusEl = el('div', { class: 'statusbar' }));
   sctx = stage.getContext('2d'); octx = overlay.getContext('2d');
   buildRibbon($('#ribbon')); buildPanel($('#side'));
@@ -87,6 +87,7 @@ export function updateStatus() {
     el('button', { class: 'sb-link' + (E.prefs.notes ? ' on' : ''), onclick: () => run('toggleNotes') }, t('Notes')),
     el('button', { class: 'sb-link', onclick: () => run('panel', 'comments') }, t('Comments') + (slide()?.comments?.filter(c => !c.resolved).length ? ` (${slide().comments.filter(c => !c.resolved).length})` : '')),
     ...[['normal', 'normal', 'Normal'], ['sorter', 'sorter', 'Slide Sorter'], ['reading', 'reading', 'Reading View']].map(([v, ic, lab]) => el('button', { class: 'sb-ic' + (E.view === v ? ' on' : ''), title: t(lab), html: ICONS[ic], onclick: () => run('view', v) })),
+    el('button', { class: 'sb-ic' + (E.prefs.sideOpen ? ' on' : ''), title: t('Format Pane'), html: ICONS.pane, onclick: () => run('togglePane') }),
     el('button', { class: 'sb-ic', title: t('Slide Show'), html: ICONS.preview, onclick: () => run('showCurrent') }),
     el('button', { class: 'sb-ic', title: t('Zoom out'), onclick: () => run('zoom', E.zoom / 1.15) }, '−'),
     el('input', { type: 'range', min: 10, max: 400, value: Math.round(E.zoom * 100), class: 'zoom-range', oninput: (e) => run('zoom', e.target.value / 100) }),
@@ -145,12 +146,13 @@ function slideMenu() {
 // ---------------------------------------------------------------- stage
 export function layoutStage() {
   if (!wrap || !E.doc || E.view !== 'normal') return;
-  const pad = 40, r = wrap.getBoundingClientRect();
-  if (E.fit) E.zoom = clamp(Math.min((r.width - pad * 2) / E.doc.size.w, (r.height - pad * 2) / E.doc.size.h), .05, 4);
-  const w = Math.round(E.doc.size.w * E.zoom), h = Math.round(E.doc.size.h * E.doc.size.h / E.doc.size.h * E.zoom);
+  const pad = 18, rul = E.prefs.ruler ? 18 : 0;
+  const cw = wrap.clientWidth - rul, ch = wrap.clientHeight - rul;
+  if (E.fit) E.zoom = clamp(Math.min((cw - pad * 2) / E.doc.size.w, (ch - pad * 2) / E.doc.size.h), .05, 4);
+  const w = Math.round(E.doc.size.w * E.zoom), h = Math.round(E.doc.size.h * E.zoom);
   const st = $('#stage'); st.style.width = w + 'px'; st.style.height = h + 'px';
   for (const c of [stage, overlay]) { c.width = Math.round(w * dpr()); c.height = Math.round(h * dpr()); c.style.width = w + 'px'; c.style.height = h + 'px'; }
-  st.style.margin = `${Math.max(pad, (r.height - h) / 2)}px ${Math.max(pad, (r.width - w) / 2)}px`;
+  wrap.classList.toggle('with-rulers', !!E.prefs.ruler); wrap.classList.toggle('fit', !!E.fit);
   stage.style.filter = E.prefs.colorMode === 'gray' ? 'grayscale(1)' : E.prefs.colorMode === 'bw' ? 'grayscale(1) contrast(4)' : 'none';
   drawStage(); drawRulers(); updateStatus();
 }
@@ -418,7 +420,9 @@ Object.assign(CMD, {
   save: async () => { finishTextEdit(); const n = await saveToFile(E.doc, { password: E.doc._passwordValue }); if (n) { E.dirty = false; await saveLocal(E.doc, thumbDataURL()); await addVersion(E.doc, t('Saved')); D.toast(t('Saved') + ': ' + n); updateQuick(); } },
   saveAs: async () => { finishTextEdit(); const n = await saveToFile(E.doc, { saveAs: true, password: E.doc._passwordValue }); if (n) { E.dirty = false; await saveLocal(E.doc, thumbDataURL()); D.toast(t('Saved') + ': ' + n); } },
   toggleUiTheme: () => { E.prefs.uiTheme = E.prefs.uiTheme === 'dark' ? 'light' : 'dark'; savePrefs(); document.body.dataset.theme = E.prefs.uiTheme; mountEditor($('#app')); },
-  panel: (name) => { E.prefs.panel = name; savePrefs(); $('#side')?.classList.remove('collapsed'); refreshPanel(true); drawOverlay(); },
+  panel: (name) => { E.prefs.panel = name; E.prefs.sideOpen = true; savePrefs(); const sd = $('#side'); const was = sd?.classList.contains('collapsed'); sd?.classList.remove('collapsed'); refreshPanel(true); drawOverlay(); if (was) setTimeout(layoutStage, 30); },
+  closePane: () => { E.prefs.sideOpen = false; savePrefs(); $('#side')?.classList.add('collapsed'); setTimeout(layoutStage, 30); updateStatus(); },
+  togglePane: () => E.prefs.sideOpen ? run('closePane') : run('panel', E.prefs.panel || 'format'),
   toggleNotes: () => { E.prefs.notes = !E.prefs.notes; savePrefs(); applyView(); updateStatus(); },
   view: (v) => { if (v === 'master') return D.slideMaster(); if (v === 'handout') return D.printDialog('handouts'); E.view = v; finishTextEdit(); applyView(); updateStatus(); emit('ribbonState'); },
   zoom: (z) => { E.fit = false; E.zoom = clamp(z, .1, 4); layoutStage(); }, fit: () => { E.fit = true; layoutStage(); },
