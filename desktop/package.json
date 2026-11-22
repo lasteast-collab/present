@@ -1,0 +1,84 @@
+{
+  "name": "lasteast-present",
+  "productName": "Lasteast Present",
+  "version": "1.0.0",
+  "description": "Lasteast Present Professional 2024 — Ideas. Design. Present.",
+  "author": { "name": "Lasteast", "email": "support@lasteast.app" },
+  "homepage": "https://lasteast-present.netlify.app",
+  "license": "UNLICENSED",
+  "main": "main.js",
+  "scripts": {
+    "prepare-app": "node scripts/copy-app.js",
+    "start": "npm run prepare-app && electron .",
+    "dist": "npm run prepare-app && electron-builder",
+    "dist:win": "npm run prepare-app && electron-builder --win",
+    "dist:mac": "npm run prepare-app && electron-builder --mac",
+    "dist:linux": "npm run prepare-app && electron-builder --linux"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "app.lasteast.present",
+    "productName": "Lasteast Present",
+    "copyright": "© 2026 Lasteast",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["main.js", "preload.js", "app/**/*", "package.json"],
+    "publish": [{ "provider": "github", "owner": "lasteast-collab", "repo": "present", "releaseType": "release" }],
+    "fileAssociations": [
+      { "ext": "lpres", "name": "Lasteast Presentation", "description": "Lasteast Presentation", "role": "Editor", "icon": "icon" },
+      { "ext": "pptx", "name": "PowerPoint Presentation", "description": "PowerPoint Presentation", "role": "Editor", "icon": "icon" }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "artifactName": "Lasteast-Present-Professional-2024-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Lasteast Present",
+      "uninstallDisplayName": "Lasteast Present Professional 2024",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerSidebar": "build/installerSidebar.bmp",
+      "uninstallerSidebar": "build/installerSidebar.bmp",
+      "installerHeader": "build/installerHeader.bmp",
+      "artifactName": "Lasteast-Present-Professional-2024-Setup.${ext}",
+      "menuCategory": "Lasteast",
+      "deleteAppDataOnUninstall": false,
+      "license": "build/license.txt"
+    },
+    "mac": {
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity",
+      "target": [{ "target": "dmg", "arch": ["arm64", "x64"] }, { "target": "zip", "arch": ["arm64", "x64"] }],
+      "artifactName": "Lasteast-Present-Professional-2024-mac-${arch}.${ext}",
+      "hardenedRuntime": false,
+      "identity": null,
+      "extendInfo": {
+        "NSCameraUsageDescription": "Lasteast Present uses the camera only when you turn on Selfie Presenter Mode.",
+        "NSMicrophoneUsageDescription": "Lasteast Present uses the microphone only when you record narration or presentations."
+      }
+    },
+    "dmg": { "title": "Lasteast Present", "artifactName": "Lasteast-Present-Professional-2024-mac-${arch}.${ext}" },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "Office",
+      "synopsis": "Ideas. Design. Present.",
+      "target": [{ "target": "AppImage", "arch": ["x64"] }, { "target": "deb", "arch": ["x64"] }],
+      "artifactName": "Lasteast-Present-Professional-2024-${arch}.${ext}",
+      "mimeTypes": ["application/x-lasteast-presentation", "application/vnd.openxmlformats-officedocument.presentationml.presentation"]
+    },
+    "appImage": { "artifactName": "Lasteast-Present-Professional-2024-x86_64.${ext}" },
+    "deb": { "artifactName": "Lasteast-Present-Professional-2024-amd64.${ext}", "maintainer": "Lasteast <support@lasteast.app>" }
+  }
+}
