@@ -43,4 +43,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-        run: npx electron-builder --publish always
+        shell: bash
+        run: |
+          for i in 1 2 3; do
+            npx electron-builder --publish always && exit 0
+            echo "Build attempt $i failed, retrying…"; rm -rf dist; sleep 20
+          done
+          exit 1
