@@ -1,7 +1,7 @@
 // Lasteast Present — original UI icon set (24×24, stroke)
 const S = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
 export const ICONS = {
-  logo: `<svg viewBox="0 0 64 64"><defs><linearGradient id="lpg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb04a"/><stop offset=".55" stop-color="#f26a1b"/><stop offset="1" stop-color="#c62f1c"/></linearGradient></defs><path d="M32 3 57 17.5v29L32 61 7 46.5v-29z" fill="url(#lpg)"/><path d="M22 18h6v22h14v6H22z" fill="#fff"/><path d="M34 18h6.5c5.5 0 9 3.3 9 8.2s-3.5 8.3-9 8.3H40V40h-6zm6 5.3v6h.8c2 0 3.2-1.1 3.2-3s-1.2-3-3.2-3z" fill="#1d1f24" opacity=".92"/></svg>`,
+  logo: `<img src="../assets/logo-256.png" alt="Lasteast Present" draggable="false">`,
   prev: S('<path d="M15 18l-6-6 6-6"/>'), next: S('<path d="M9 18l6-6-6-6"/>'),
   pen: S('<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>'), highlighter: S('<path d="M9 15l-4 4h5l2-2"/><path d="M9 15l7-11 4 3-7 11z"/>'),
   laser: S('<circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="7" opacity=".5"/>'), eraser: S('<path d="M7 20h11M5 15l8-9 6 6-8 8H8z"/>'),
