@@ -33,6 +33,12 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Bundle web app
         run: npm run prepare-app
+      - name: Prepare macOS runner for DMG creation
+        if: runner.os == 'macOS'
+        run: |
+          sudo mdutil -a -i off || true
+          sudo pkill -9 XProtect >/dev/null 2>&1 || true
+          while pgrep XProtect >/dev/null; do sleep 3; done
       - name: Build & publish installers
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
