@@ -142,6 +142,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mut);font-siz
 const REPO = 'lasteast-collab/present';
 const base = `https://github.com/${REPO}/releases/latest/download/`;
 document.querySelectorAll('.dlbtn').forEach(a => a.href = base + a.dataset.file);
+// If the newest release is still missing a platform build, link to the most recent release that has it.
+fetch(`https://api.github.com/repos/${REPO}/releases?per_page=10`).then(r => r.ok ? r.json() : []).then(rels => {
+  document.querySelectorAll('.dlbtn').forEach(a => {
+    const rel = rels.find(r => !r.draft && !r.prerelease && r.assets.some(x => x.name === a.dataset.file));
+    const asset = rel && rel.assets.find(x => x.name === a.dataset.file);
+    if (asset) a.href = asset.browser_download_url;
+  });
+}).catch(() => {});
 // OS detection
 const ua = navigator.userAgent, plat = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
 let os = /win/.test(plat) || /Windows/.test(ua) ? 'win' : /mac/.test(plat) || /Mac OS/.test(ua) ? 'mac' : /linux|x11/.test(plat) || /Linux/.test(ua) ? 'linux' : 'web';
