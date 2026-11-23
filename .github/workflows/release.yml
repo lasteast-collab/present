@@ -1,4 +1,5 @@
 name: Build desktop installers
+# Builds Windows, macOS and Linux installers and publishes them to GitHub Releases.
 
 on:
   push:
