@@ -41,7 +41,7 @@ function boot() {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1440, height: 900, minWidth: 960, minHeight: 600, title: 'Lasteast Present', backgroundColor: '#0b1a3a', show: false,
+    width: 1440, height: 900, minWidth: 960, minHeight: 600, title: 'Lasteast Present', autoHideMenuBar: true, backgroundColor: '#0b1a3a', show: false,
     icon: path.join(__dirname, 'app', 'assets', 'icon-512.png'),
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, sandbox: true, spellcheck: true },
   });
@@ -54,13 +54,17 @@ function createWindow() {
   win.webContents.session.setSpellCheckerLanguages(['en-US', 'he', 'ar'].filter(l => session.defaultSession.availableSpellCheckerLanguages.includes(l)));
   win.loadURL('lasteast://app/app/index.html');
   const isMac = process.platform === 'darwin';
-  Menu.setApplicationMenu(Menu.buildFromTemplate([
+  if (isMac) {
+    Menu.setApplicationMenu(Menu.buildFromTemplate([
     ...(isMac ? [{ label: 'Lasteast Present', submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'hide' }, { role: 'hideOthers' }, { type: 'separator' }, { role: 'quit' }] }] : []),
     { label: 'File', submenu: [{ label: 'New Window', accelerator: 'CmdOrCtrl+Shift+N', click: () => createWindow() }, { type: 'separator' }, isMac ? { role: 'close' } : { role: 'quit' }] },
     { label: 'Edit', submenu: [{ role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },
     { label: 'View', submenu: [{ role: 'togglefullscreen' }, { role: 'resetZoom' }, { role: 'zoomIn' }, { role: 'zoomOut' }, { type: 'separator' }, { role: 'toggleDevTools' }] },
     { label: 'Help', submenu: [{ label: 'Lasteast Present website', click: () => shell.openExternal('https://lasteast-present.netlify.app') }, { label: 'Check for Updates…', click: () => checkUpdates(true) }] },
   ]));
+  } else {
+    Menu.setApplicationMenu(null); win.setMenuBarVisibility(false); win.removeMenu();
+  }
 }
 
 let updater = null;

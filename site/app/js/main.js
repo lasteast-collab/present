@@ -11,7 +11,7 @@ import * as D from './dialogs.js';
 import { startAudience } from './slideshow.js';
 import { SIGNATURE, getT } from './transitions.js';
 
-window.LP_VERSION = '1.3.1';
+window.LP_VERSION = '1.3.2';
 window.__shapePts = (s) => s === 'line' || s === 'arrowLine' ? null : shapePoints(s, 24, 24, 5).map(p => p.map(v => v.toFixed(1)).join(',')).join(' ');
 document.body.dataset.theme = E.prefs.uiTheme;
 const app = $('#app'), home = $('#home');
